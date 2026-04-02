@@ -1,0 +1,107 @@
+/* App.css - სრული, გასუფთავებული ვერსია */
+
+/* 1. გლობალური გასუფთავება */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #050505;
+  /* ძირითადი შავი ფონი */
+}
+
+/* 2. ინვესტორული ბარათების ანიმაცია (InputCard-ისთვის) */
+.interactive-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  border: 1px solid #222 !important;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+/* მაუსის მიტანისას ოქროსფერი ნათება */
+.interactive-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: #D4AF37 !important;
+  box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2) !important;
+  background-color: #161616 !important;
+  z-index: 2;
+}
+
+/* 3. სლაიდერის (Range) სტილი */
+.golden-slider {
+  width: 100%;
+  accent-color: #D4AF37;
+  /* სლაიდერის თავი გახდება ოქროსფერი */
+  cursor: grab;
+  margin-top: 10px;
+}
+
+.golden-slider:active {
+  cursor: grabbing;
+}
+
+/* 4. შედეგების პატარა ბარათების (ResultCard) ანიმაცია */
+.result-card-anim {
+  transition: all 0.3s ease !important;
+  border: 1px solid #222 !important;
+}
+
+.result-card-anim:hover {
+  transform: scale(1.05);
+  background-color: #1a1a1a !important;
+  border-color: #333 !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 5. PDF ექსპორტის ღილაკის დამატებითი სტილი (თუ დაგჭირდა) */
+#export-btn-container button {
+  transition: all 0.3s ease;
+}
+
+#export-btn-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* 6. მობილური ვერსიისთვის ადაპტაცია (რომ ბარათები არ აირიოს) */
+@media (max-width: 1024px) {
+  #main-report {
+    padding: 15px !important;
+  }
+
+  .interactive-card:hover {
+    transform: none;
+    /* მობილურზე Hover არ გვინდა */
+  }
+}
+
+.icon-btn:hover {
+  color: #D4AF37 !important;
+}
+
+/* ინტერაქტიული ლინკების სტილი */
+.interactive-link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.interactive-link:hover {
+  color: #D4AF37 !important;
+  transform: translateY(-3px) scale(1.02);
+  /* ოდნავ ადიდებს კიდეც */
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+  opacity: 1 !important;
+}
+
+/* ბარათებისთვის და ღილაკებისთვის (უფრო მკვეთრი ამოწევა) */
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+}
