@@ -7,13 +7,32 @@ const ResultCard = ({ label, value, color, tooltip }) => {
     return (
         <div style={{
             backgroundColor: '#111',
-            padding: '20px',
-            borderRadius: '24px',
+            padding: '20px 20px', // გავზარდეთ დაშორებები (Padding)
+            borderRadius: '30px', // ოდნავ უფრო დავამრგვალეთ კუთხეები
             border: '1px solid #222',
-            position: 'relative'
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center', // ტექსტი შუაში რომ მოექცეს ვერტიკალურად
+            minHeight: '120px', // მკაცრად განვსაზღვრეთ სიმაღლე
+            transition: '0.3s ease'
         }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <p style={{ color: '#D4AF37', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', margin: 0 }}>{label}</p>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center', // გავასწორეთ ცენტრზე
+                marginBottom: '15px'
+            }}>
+                <p style={{
+                    color: '#D4AF37',
+                    fontSize: '11px',
+                    fontWeight: '900',
+                    textTransform: 'uppercase',
+                    margin: 0,
+                    letterSpacing: '1px' // უფრო "ძვირფასი" იერი რომ ჰქონდეს
+                }}>
+                    {label}
+                </p>
 
                 {tooltip && (
                     <div style={{ position: 'relative' }}>
@@ -38,7 +57,14 @@ const ResultCard = ({ label, value, color, tooltip }) => {
                     </div>
                 )}
             </div>
-            <h3 style={{ color: color, fontSize: '24px', fontWeight: '900', marginTop: '10px', marginBottom: 0 }}>
+            <h3 style={{
+                color: color,
+                fontSize: '32px', // ციფრი ოდნავ გავადიდეთ (იყო 24px)
+                fontWeight: '900',
+                marginTop: '0',
+                marginBottom: 0,
+                letterSpacing: '-1px'
+            }}>
                 ${value.toLocaleString()}
             </h3>
         </div>

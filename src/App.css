@@ -53,14 +53,18 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* 5. PDF ექსპორტის ღილაკის დამატებითი სტილი (თუ დაგჭირდა) */
+/* 5. PDF ექსპორტის ღილაკის ფინალური გასწორება */
 #export-btn-container button {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform: scale(1) translateY(0);
+  /* საწყისი მდგომარეობა */
 }
 
 #export-btn-container button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+  transform: translateY(-3px) !important;
+  /* მხოლოდ მაღლა ავიდეს, არ გაიზარდოს */
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3) !important;
+  filter: brightness(1.1);
 }
 
 /* 6. მობილური ვერსიისთვის ადაპტაცია (რომ ბარათები არ აირიოს) */
@@ -104,4 +108,119 @@ body {
 .hover-lift:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+}
+
+/* ლინკების ანიმაცია ნავიგაციაში და ფუტერში */
+nav a,
+footer a {
+  transition: all 0.3s ease !important;
+}
+
+nav a:hover,
+footer a:hover {
+  color: #D4AF37 !important;
+  /* ოქროსფერი */
+  transform: translateY(-2px);
+  /* ოდნავ აწევა */
+}
+
+/* ტელეფონის და მეილის გასწორება, რომ დაეჭიროს */
+footer ul li {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+footer ul li:hover {
+  color: #D4AF37 !important;
+}
+
+/* PDF და კონსულტაციის ღილაკების ეფექტი */
+button {
+  transition: all 0.3s ease-in-out !important;
+}
+
+button:hover {
+  filter: brightness(1.2);
+  /* ოდნავ განათება */
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+  /* ოქროსფერი ნათება */
+  transform: translateY(-2px);
+  /* ძალიან ოდნავ გაზრდა */
+}
+
+/* ლინკების ანიმაცია */
+nav a,
+footer a {
+  transition: all 0.3s ease-in-out !important;
+  display: inline-block;
+  /* რომ ამოწევა იმუშაოს */
+}
+
+nav a:hover,
+footer a:hover {
+  color: #D4AF37 !important;
+  transform: translateY(-3px);
+}
+
+/* 6. მობილური ვერსიის ფინალური გასწორება */
+@media (max-width: 768px) {
+
+  /* აიძულებს კონტეინერს იყოს ვერტიკალური */
+  #main-report,
+  .main-container {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 10px !important;
+    gap: 20px !important;
+    overflow-x: hidden !important;
+  }
+
+  /* ყველა შვილობილ ბლოკს (ინპუტებს, გრაფიკს, ლურჯ ბარათს) აძლევს სრულ სიგანეს */
+  #main-report>div,
+  .left-side,
+  .right-side,
+  div[style*="position: sticky"],
+  div[style*="position: absolute"] {
+    position: relative !important;
+    /* აუქმებს გვერდზე გაჭედვას */
+    width: 100% !important;
+    max-width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    margin: 0 0 20px 0 !important;
+    transform: none !important;
+    /* აუქმებს ზედმეტ გადაწევებს */
+  }
+
+  /* გრაფიკის ზომის ოპტიმიზაცია */
+  .recharts-responsive-container {
+    height: 350px !important;
+    width: 100% !important;
+  }
+
+  /* ტექსტების ზომების დაპატარავება მობილურისთვის */
+  h1 {
+    font-size: 22px !important;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 18px !important;
+  }
+
+  /* ინპუტების ბადე (Grid) აუცილებლად ერთ სვეტად */
+  .inputs-grid,
+  div[style*="display: grid"] {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  /* ნავიგაციის ღილაკების დალაგება */
+  nav,
+  footer {
+    flex-direction: column !important;
+    text-align: center;
+    gap: 15px;
+  }
 }

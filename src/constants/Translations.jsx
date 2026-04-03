@@ -32,7 +32,16 @@ export const translations = {
         ttTax: "გადასახადი + მოვლა-პატრონობის ხარჯი.",
         ttMortgage: "წყარო: საქართველოს ეროვნული ბანკი (NBG.gov.ge)",
         ttDown: "მინიმალური შენატანი ბანკის მოთხოვნით.",
-        ttPeriod: "საინვესტიციო ჰორიზონტი."
+        ttPeriod: "საინვესტიციო ჰორიზონტი.",
+        // ახალი ტერმინები ბარათებისთვის:
+        finalValue: "ბინის ღირებულება",
+        monthlyNet: "წმინდა მოგება",
+        mortgagePay: "იპოთეკის გადასახადი",
+        equity: "შენი წილი",
+        ttFinalValue: "ბინის სავარაუდო საბაზრო ფასი პერიოდის ბოლოს.",
+        ttMonthlyNet: "თვიური შემოსავალი ხარჯებისა და იპოთეკის გამოკლებით.",
+        ttMortgagePay: "ყოველთვიური გადასახადი ბანკში.",
+        ttEquity: "ბინის ღირებულების ის ნაწილი, რომელიც უკვე შენი საკუთრებაა."
     },
     en: {
         title: "Investment Analytics",
@@ -67,7 +76,15 @@ export const translations = {
         ttTax: "Taxes + Maintenance costs.",
         ttMortgage: "Source: National Bank of Georgia (NBG.gov.ge)",
         ttDown: "Minimum down payment by bank requirements.",
-        ttPeriod: "Investment horizon."
+        ttPeriod: "Investment horizon.",
+        finalValue: "Final Value",
+        monthlyNet: "Monthly Net",
+        mortgagePay: "Mortgage Pay",
+        equity: "Equity",
+        ttFinalValue: "Estimated market value of the property at the end of the period.",
+        ttMonthlyNet: "Monthly income after deducting all expenses and mortgage.",
+        ttMortgagePay: "Monthly payment to the bank.",
+        ttEquity: "The portion of the property value that you already own."
     },
     ru: {
         title: "Инвестиционная аналитика",
@@ -102,6 +119,14 @@ export const translations = {
         ttTax: "Налоги + расходы на обслуживание.",
         ttMortgage: "Источник: Национальный Банк Грузии (NBG.gov.ge)",
         ttDown: "Минимальный взнос по требованию банка.",
-        ttPeriod: "Инвестиционный горизонт."
+        ttPeriod: "Инвестиционный горизонт.",
+        finalValue: "Стоимость жилья",
+        monthlyNet: "Чистая прибыль",
+        mortgagePay: "Ипотечный платеж",
+        equity: "Ваша доля",
+        ttFinalValue: "Оценочная рыночная стоимость жилья в конце периода.",
+        ttMonthlyNet: "Ежемесячный доход после вычета всех расходов и ипотеки.",
+        ttMortgagePay: "Ежемесячный платеж в банк.",
+        ttEquity: "Часть стоимости жилья, которая уже является вашей собственностью."
     }
 };
