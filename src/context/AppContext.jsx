@@ -6,7 +6,7 @@ import { fetchExchangeRate } from '../utils/CurrencyService';
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-    const [lang, setLang] = useState('ka');
+    const [lang, setLang] = useState('en');
     const [currency, setCurrency] = useState('USD');
     const [rate, setRate] = useState(2.7); // საწყისი კურსი
 

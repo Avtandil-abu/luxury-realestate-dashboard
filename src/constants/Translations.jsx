@@ -33,7 +33,6 @@ export const translations = {
         ttMortgage: "წყარო: საქართველოს ეროვნული ბანკი (NBG.gov.ge)",
         ttDown: "მინიმალური შენატანი ბანკის მოთხოვნით.",
         ttPeriod: "საინვესტიციო ჰორიზონტი.",
-        // ახალი ტერმინები ბარათებისთვის:
         finalValue: "ბინის ღირებულება",
         monthlyNet: "წმინდა მოგება",
         mortgagePay: "იპოთეკის გადასახადი",
@@ -41,7 +40,13 @@ export const translations = {
         ttFinalValue: "ბინის სავარაუდო საბაზრო ფასი პერიოდის ბოლოს.",
         ttMonthlyNet: "თვიური შემოსავალი ხარჯებისა და იპოთეკის გამოკლებით.",
         ttMortgagePay: "ყოველთვიური გადასახადი ბანკში.",
-        ttEquity: "ბინის ღირებულების ის ნაწილი, რომელიც უკვე შენი საკუთრებაა."
+        ttEquity: "ბინის ღირებულების ის ნაწილი, რომელიც უკვე შენი საკუთრებაა.",
+        // --- ახალი ტექსტები, რომლებიც აპლიკაციაში ჩავამატეთ ---
+        rentGrowthLabel: "ქირის წლიური ზრდა (ინფლაცია)",
+        rentSource: "ეფუძნება სამომხმარებლო ფასების ინდექსს (CPI). წყარო: Geostat.ge",
+        syncLabel: "ავტომატური სინქრონიზაცია",
+        syncDesc: "ჩართვის შემთხვევაში, ქირა გაიზრდება ბინის საბაზრო ფასის ცვლილების პროპორციულად.",
+        growthSource: "ეფუძნება საცხოვრებელი ქონების ფასების ინდექსს (RPPI). წყარო: Geostat.ge"
     },
     en: {
         title: "Investment Analytics",
@@ -84,7 +89,13 @@ export const translations = {
         ttFinalValue: "Estimated market value of the property at the end of the period.",
         ttMonthlyNet: "Monthly income after deducting all expenses and mortgage.",
         ttMortgagePay: "Monthly payment to the bank.",
-        ttEquity: "The portion of the property value that you already own."
+        ttEquity: "The portion of the property value that you already own.",
+        // --- New Keys ---
+        rentGrowthLabel: "Annual Rent Growth (Inflation)",
+        rentSource: "Based on Consumer Price Index (CPI). Source: Geostat.ge",
+        syncLabel: "Automatic Sync",
+        syncDesc: "If enabled, rent will increase proportionally to the property's market value growth.",
+        growthSource: "Based on Residential Property Price Index (RPPI). Source: Geostat.ge"
     },
     ru: {
         title: "Инвестиционная аналитика",
@@ -127,6 +138,12 @@ export const translations = {
         ttFinalValue: "Оценочная рыночная стоимость жилья в конце периода.",
         ttMonthlyNet: "Ежемесячный доход после вычета всех расходов и ипотеки.",
         ttMortgagePay: "Ежемесячный платеж в банк.",
-        ttEquity: "Часть стоимости жилья, которая уже является вашей собственностью."
+        ttEquity: "Часть стоимости жилья, которая уже является вашей собственностью.",
+        // --- Новые Ключи ---
+        rentGrowthLabel: "Ежегодный рост аренды (Инфляция)",
+        rentSource: "Основано на индексе потребительских цен (CPI). Источник: Geostat.ge",
+        syncLabel: "Авто-синхронизация",
+        syncDesc: "При включении, аренда будет расти пропорционально изменению рыночной стоимости жилья.",
+        growthSource: "Основано на индексе цен на жилую недвижимость (RPPI). Источник: Geostat.ge"
     }
 };

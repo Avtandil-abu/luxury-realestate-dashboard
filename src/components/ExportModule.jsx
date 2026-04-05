@@ -3,28 +3,37 @@ import { Download } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-const ExportModule = ({ projectName }) => {
+// დავამატეთ currentLang props-ებში
+const ExportModule = ({ projectName, currentLang }) => {
     const exportPDF = async () => {
         const element = document.getElementById('main-report');
 
-        // ვასკანირებთ ელემენტს
         const canvas = await html2canvas(element, {
             backgroundColor: '#050505',
-            scale: 2, // ხარისხისთვის
+            scale: 2,
             useCORS: true,
-            height: element.offsetHeight, // ვიღებთ ზუსტ სიმაღლეს რაც ეკრანზეა
-            windowWidth: 1250, // ფიქსირებული ვირტუალური ფანჯარა
+            height: element.offsetHeight,
+            windowWidth: 1250,
         });
 
         const imgData = canvas.toDataURL('image/png');
 
-        // ვქმნით PDF-ს
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
+        // ფაილის სახელიც რომ ინგლისურად იყოს default-ად
+        const fileName = currentLang === 'en' ? 'report' : currentLang === 'ru' ? 'otchet' : 'report';
+
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`${projectName}-report.pdf`);
+        pdf.save(`${projectName || 'investorcore'}-${fileName}.pdf`);
+    };
+
+    // აქ ხდება მაგია - ტექსტი იცვლება ენის მიხედვით
+    const buttonText = {
+        en: 'PDF Report',
+        ru: 'PDF Отчет',
+        ka: 'PDF რეპორტი'
     };
 
     return (
@@ -34,7 +43,7 @@ const ExportModule = ({ projectName }) => {
             color: '#D4AF37', padding: '10px 20px', borderRadius: '12px',
             cursor: 'pointer', fontWeight: 'bold'
         }}>
-            <Download size={18} /> PDF რეპორტი
+            <Download size={18} /> {buttonText[currentLang] || buttonText.en}
         </button>
     );
 };

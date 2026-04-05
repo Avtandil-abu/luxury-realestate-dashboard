@@ -4,7 +4,7 @@ import './App.css';
 import {
   Wallet, DollarSign, Calendar, ShieldCheck,
   AlertTriangle, Zap, Home, Gavel, Percent, ExternalLink,
-  Share2, Check
+  Share2, Check, RefreshCw
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip, CartesianGrid } from 'recharts';
 import ComparisonModule from './components/ComparisonModule';
@@ -44,6 +44,20 @@ const App = () => {
   const [mortgageRate, setMortgageRate] = useState(() => Number(localStorage.getItem('invest_mortgage_rate')) || 12);
   const [activeScenario, setActiveScenario] = useState('moderate');
 
+  const [rentGrowth, setRentGrowth] = useState(() => Number(localStorage.getItem('invest_rent_growth')) || 3);
+  const [isLinked, setIsLinked] = useState(() => localStorage.getItem('invest_is_linked') === 'true');
+
+  useEffect(() => {
+    const market = getLiveMarketRates();
+    if (!localStorage.getItem('invest_price')) {
+      setPrice(market.defaultPrice);
+      setRent(market.defaultRent);
+      setGrowth(market.marketGrowth);
+      setRentGrowth(market.rentInflation);
+      setMortgageRate(market.avgMortgageRate);
+    }
+  }, []);
+
   useEffect(() => {
     const sharedData = parseShareLink();
     if (sharedData) {
@@ -58,6 +72,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (isLinked) {
+      const syncedRentGrowth = Math.round((growth * 0.6) * 10) / 10;
+      setRentGrowth(syncedRentGrowth);
+    }
+  }, [growth, isLinked]);
+
+  useEffect(() => {
     localStorage.setItem('invest_price', price);
     localStorage.setItem('invest_rent', rent);
     localStorage.setItem('invest_down', downPayment);
@@ -65,7 +86,9 @@ const App = () => {
     localStorage.setItem('invest_growth', growth);
     localStorage.setItem('invest_tax', tax);
     localStorage.setItem('invest_mortgage_rate', mortgageRate);
-  }, [price, rent, downPayment, years, growth, tax, mortgageRate]);
+    localStorage.setItem('invest_rent_growth', rentGrowth);
+    localStorage.setItem('invest_is_linked', isLinked);
+  }, [price, rent, downPayment, years, growth, tax, mortgageRate, rentGrowth, isLinked]);
 
   const handleShare = () => {
     const link = generateShareLink({ price, rent, downPayment, years, growth, tax, mortgageRate });
@@ -75,7 +98,14 @@ const App = () => {
   };
 
   const stats = calculateInvestment({
-    price, rent, downPayment, years, growth, tax, mortgageRate
+    price: Number(price),
+    rent: Number(rent),
+    downPayment: Number(downPayment),
+    years: Number(years),
+    growth: Number(growth),
+    tax: Number(tax),
+    mortgageRate: Number(mortgageRate),
+    rentGrowth: Number(rentGrowth)
   }, currency, rate);
 
   const currSym = currency === 'GEL' ? '₾' : '$';
@@ -155,7 +185,7 @@ const App = () => {
           </div>
 
           <div style={{ display: 'flex', gap: '12px', width: isMobile ? '100%' : 'auto' }}>
-            <ExportModule projectName="avtandil-pro-analytics" />
+            <ExportModule projectName="avtandil-pro-analytics" currentLang={lang} />
             <button
               onClick={handleShare}
               style={{
@@ -175,24 +205,87 @@ const App = () => {
           <section>
             <InputCard label={t.price} icon={<DollarSign size={22} />} value={currency === 'GEL' ? price * rate : price} setter={setPrice} unit={currSym} min={1000} max={2000000} step={1000} tooltip={t.ttPrice} />
             <InputCard label={t.rent} icon={<Wallet size={22} />} value={rent} setter={setRent} unit={currSym} min={0} max={20000} step={50} tooltip={t.ttRent} />
-            <InputCard label={t.growth} icon={<Home size={22} />} value={growth} setter={setGrowth} unit="%" min={0} max={30} step={1} tooltip={t.ttGrowth} />
+
+            <InputCard
+              label={t.rentGrowthLabel}
+              icon={<RefreshCw size={22} />}
+              value={rentGrowth}
+              setter={setRentGrowth}
+              unit="%"
+              min={0} max={25} step={1}
+              tooltip="რამდენი პროცენტით მოიმატებს ქირა ყოველწლიურად"
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '-12px', marginBottom: '15px', marginLeft: '15px', opacity: 0.8 }}>
+              {t.rentSource}
+            </div>
+
+            <div style={{
+              display: 'flex', flexDirection: 'column', gap: '4px',
+              marginBottom: '16px', padding: '15px 24px',
+              backgroundColor: 'rgba(212, 175, 55, 0.05)', borderRadius: '24px',
+              border: '1px solid rgba(212, 175, 55, 0.2)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <input
+                  type="checkbox"
+                  checked={isLinked}
+                  onChange={(e) => setIsLinked(e.target.checked)}
+                  style={{ width: '18px', height: '18px', accentColor: '#D4AF37', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '14px', color: '#D4AF37', fontWeight: 'bold' }}>
+                  {t.syncLabel}
+                </span>
+              </div>
+              <p style={{ fontSize: '11px', color: '#888', margin: '6px 0 0 30px', lineHeight: '1.4' }}>
+                {t.syncDesc}
+              </p>
+            </div>
+
+            <InputCard
+              label={t.growth}
+              icon={<Home size={22} />}
+              value={growth}
+              setter={setGrowth}
+              unit="%" min={0} max={30} step={1} tooltip={t.ttGrowth}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '-12px', marginBottom: '15px', marginLeft: '15px', opacity: 0.8 }}>
+              {t.growthSource}
+            </div>
+
             <InputCard label={t.tax} icon={<Gavel size={22} />} value={tax} setter={setTax} unit="%" min={0} max={50} step={1} tooltip={t.ttTax} />
-            <InputCard label={t.mortgage} icon={<Percent size={22} />} value={mortgageRate} setter={setMortgageRate} unit="%" min={1} max={25} step={0.1} tooltip={t.ttMortgage} />
+            <InputCard label={t.mortgage} icon={<Percent size={22} />} value={mortgageRate} setter={setMortgageRate} unit="%" min={1} max={25} step={1} tooltip={t.ttMortgage} />
             <InputCard label={t.downPayment} icon={<Percent size={22} />} value={downPayment} setter={setDownPayment} unit="%" min={0} max={100} step={5} tooltip={t.ttDown} />
             <InputCard label={t.period} icon={<Calendar size={22} />} value={years} setter={setYears} unit={` ${t.years}`} min={1} max={40} step={1} tooltip={t.ttPeriod} />
           </section>
 
           <section style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-            <div style={{ backgroundColor: '#2563eb', padding: isMobile ? '30px' : '50px', borderRadius: '40px', boxShadow: '0 20px 40px rgba(37, 99, 235, 0.2)' }}>
+            <div style={{
+              backgroundColor: '#2563eb',
+              padding: isMobile ? '30px' : '50px',
+              borderRadius: '40px',
+              boxShadow: '0 20px 40px rgba(37, 99, 235, 0.2)',
+              minHeight: isMobile ? '280px' : '380px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center'
+            }}>
               <p style={{ fontSize: '12px', opacity: 0.9, textTransform: 'uppercase', fontWeight: '900' }}>{t.profit}</p>
-              <h2 style={{ fontSize: isMobile ? '40px' : '72px', fontWeight: '900', margin: '20px 0' }}>{currSym}{Math.round(stats.totalProfit).toLocaleString()}</h2>
+              <h2 style={{
+                fontSize: isMobile ? '32px' : '64px', fontWeight: '900', margin: '20px 0', whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>
+                {currSym}{Math.round(stats.totalProfit).toLocaleString()}
+              </h2>
               <div style={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
                 <span style={{ color: '#4ade80', fontWeight: '900' }}>{t.roi}: {stats.roi}%</span>
                 <span style={{ fontSize: '14px', opacity: 1 }}>{t.breakeven}: {stats.breakeven} {t.years}</span>
               </div>
             </div>
 
-            <SmartInsights roi={stats.roi} cashflow={stats.monthlyCashflow} growth={growth} />
+            <div style={{ minHeight: '140px' }}>
+              <SmartInsights roi={stats.roi} cashflow={stats.monthlyCashflow} growth={growth} />
+            </div>
 
             <div style={{ backgroundColor: '#111', padding: isMobile ? '15px' : '30px', borderRadius: '40px', border: '1px solid #222', height: isMobile ? '280px' : '320px' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -270,7 +363,6 @@ const App = () => {
             appreciation={stats.appreciation}
             netRent={stats.rent * (1 - tax / 100)}
             loan={stats.price - stats.investedCapital}
-            // თუ stats.totalMortgage არ მუშაობს, პირდაპირ გამოვაკლოთ სხვაობიდან:
             totalMortgage={stats.totalMortgage || (stats.appreciation + (stats.rent * 12 * years * (1 - tax / 100)) - stats.totalProfit)}
             years={years}
             lang={lang}
