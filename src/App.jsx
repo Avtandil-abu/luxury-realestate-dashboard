@@ -15,6 +15,10 @@ import ExportModule from './components/ExportModule';
 import FinancialSummary from './components/FinancialSummary';
 import HeaderControls from './components/HeaderControls';
 import SmartInsights from './components/SmartInsights';
+import ExpenseModule from './components/ExpenseModule';
+import MarketBenchmark from './components/MarketBenchmark';
+import StressTest from './components/StressTest';
+import ExitStrategy from './components/ExitStrategy';
 
 import { useApp } from './context/AppContext';
 import { calculateInvestment } from './utils/LogicEngine';
@@ -36,15 +40,15 @@ const App = () => {
   const t = translations[lang];
 
   const [price, setPrice] = useState(() => Number(localStorage.getItem('invest_price')) || 100000);
-  const [rent, setRent] = useState(() => Number(localStorage.getItem('invest_rent')) || 400);
   const [downPayment, setDownPayment] = useState(() => Number(localStorage.getItem('invest_down')) || 30);
+  const [rent, setRent] = useState(() => Number(localStorage.getItem('invest_rent')) || 600);
   const [years, setYears] = useState(() => Number(localStorage.getItem('invest_years')) || 10);
-  const [growth, setGrowth] = useState(() => Number(localStorage.getItem('invest_growth')) || 5);
-  const [tax, setTax] = useState(() => Number(localStorage.getItem('invest_tax')) || 10);
-  const [mortgageRate, setMortgageRate] = useState(() => Number(localStorage.getItem('invest_mortgage_rate')) || 12);
-  const [activeScenario, setActiveScenario] = useState('moderate');
+  const [growth, setGrowth] = useState(() => Number(localStorage.getItem('invest_growth')) || 11);
+  const [tax, setTax] = useState(() => Number(localStorage.getItem('invest_tax')) || 5);
+  const [mortgageRate, setMortgageRate] = useState(() => Number(localStorage.getItem('invest_mortgage_rate')) || 12.5);
+  const [rentGrowth, setRentGrowth] = useState(() => Number(localStorage.getItem('invest_rent_growth')) || 7.2);
 
-  const [rentGrowth, setRentGrowth] = useState(() => Number(localStorage.getItem('invest_rent_growth')) || 3);
+  const [activeScenario, setActiveScenario] = useState('moderate');
   const [isLinked, setIsLinked] = useState(() => localStorage.getItem('invest_is_linked') === 'true');
 
   useEffect(() => {
@@ -71,6 +75,27 @@ const App = () => {
     }
   }, []);
 
+  // --- ერთიანი სინქრონიზაციის ბლოკი (ვალუტა + Growth + Rent Growth) ---
+  useEffect(() => {
+    let currentGrowth = growth;
+
+    // 1. ვალუტის მიხედვით ზრდის კორექტირება
+    if (currency === 'GEL') {
+      currentGrowth = 11;
+      setGrowth(11);
+    } else {
+      currentGrowth = 6;
+      setGrowth(6);
+    }
+
+    // 2. თუ სინქრონიზაცია ჩართულია, ვაყოლებთ ქირასაც
+    if (isLinked) {
+      const syncedRentGrowth = Math.round((currentGrowth * 0.6) * 10) / 10;
+      setRentGrowth(syncedRentGrowth);
+    }
+  }, [currency, isLinked]);
+
+  // ცალკე useEffect მხოლოდ ქირის სინქრონიზაციისთვის, როცა მომხმარებელი ხელით ცვლის Growth-ს
   useEffect(() => {
     if (isLinked) {
       const syncedRentGrowth = Math.round((growth * 0.6) * 10) / 10;
@@ -162,9 +187,12 @@ const App = () => {
             </a>
           </div>
         )}
-        <button style={{ backgroundColor: '#D4AF37', color: '#000', border: 'none', padding: '10px 20px', borderRadius: '12px', fontWeight: '900', cursor: 'pointer', width: isMobile ? '100%' : 'auto' }}>
+        <a
+          href="mailto:abuashviliavtandil@gmail.com"
+          className="consult-link-btn"
+        >
           {t.consult}
-        </button>
+        </a>
       </nav>
 
       <main id="main-report" style={{ maxWidth: '1200px', margin: '0 auto', padding: isMobile ? '20px' : '40px' }}>
@@ -203,8 +231,8 @@ const App = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.2fr', gap: isMobile ? '20px' : '40px' }}>
           <section>
-            <InputCard label={t.price} icon={<DollarSign size={22} />} value={currency === 'GEL' ? price * rate : price} setter={setPrice} unit={currSym} min={1000} max={2000000} step={1000} tooltip={t.ttPrice} />
-            <InputCard label={t.rent} icon={<Wallet size={22} />} value={rent} setter={setRent} unit={currSym} min={0} max={20000} step={50} tooltip={t.ttRent} />
+            <InputCard label={t.price} icon={<DollarSign size={22} />} value={currency === 'GEL' ? Math.round(price * rate) : price} setter={(val) => setPrice(currency === 'GEL' ? Math.round(val / rate) : val)} unit={currSym} min={1000} max={2000000} step={1000} tooltip={t.ttPrice} />
+            <InputCard label={t.rent} icon={<Wallet size={22} />} value={currency === 'GEL' ? Math.round(rent * rate) : rent} setter={(val) => setRent(currency === 'GEL' ? Math.round(val / rate) : val)} unit={currSym} min={0} max={20000} step={50} tooltip={t.ttRent} />
 
             <InputCard
               label={t.rentGrowthLabel}
@@ -215,8 +243,14 @@ const App = () => {
               min={0} max={25} step={1}
               tooltip="რამდენი პროცენტით მოიმატებს ქირა ყოველწლიურად"
             />
-            <div style={{ fontSize: '11px', color: '#666', marginTop: '-12px', marginBottom: '15px', marginLeft: '15px', opacity: 0.8 }}>
+            <div style={{ fontSize: '13px', color: '#b8b2b2', marginTop: '-12px', marginBottom: '15px', marginLeft: '15px', opacity: 0.9 }}>
               {t.rentSource}
+              <a href="https://www.geostat.ge/ka/modules/categories/637/ushravi-qonebis-fasebis-indeqsi"
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: '#2563eb', textDecoration: 'none', marginLeft: '5px', fontWeight: 'bold' }}>
+                [ნახე წყარო]
+              </a>
             </div>
 
             <div style={{
@@ -236,7 +270,7 @@ const App = () => {
                   {t.syncLabel}
                 </span>
               </div>
-              <p style={{ fontSize: '11px', color: '#888', margin: '6px 0 0 30px', lineHeight: '1.4' }}>
+              <p style={{ fontSize: '12px', color: '#d3cecefe', margin: '6px 0 0 30px', lineHeight: '1.5' }}>
                 {t.syncDesc}
               </p>
             </div>
@@ -248,11 +282,16 @@ const App = () => {
               setter={setGrowth}
               unit="%" min={0} max={30} step={1} tooltip={t.ttGrowth}
             />
-            <div style={{ fontSize: '11px', color: '#666', marginTop: '-12px', marginBottom: '15px', marginLeft: '15px', opacity: 0.8 }}>
+            <div style={{ fontSize: '12px', color: '#e2dede', marginTop: '-12px', marginBottom: '15px', marginLeft: '15px', opacity: 0.8 }}>
               {t.growthSource}
             </div>
 
-            <InputCard label={t.tax} icon={<Gavel size={22} />} value={tax} setter={setTax} unit="%" min={0} max={50} step={1} tooltip={t.ttTax} />
+            <ExpenseModule
+              totalTax={tax}
+              setTotalTax={setTax}
+              lang={lang}
+              t={t}
+            />
             <InputCard label={t.mortgage} icon={<Percent size={22} />} value={mortgageRate} setter={setMortgageRate} unit="%" min={1} max={25} step={1} tooltip={t.ttMortgage} />
             <InputCard label={t.downPayment} icon={<Percent size={22} />} value={downPayment} setter={setDownPayment} unit="%" min={0} max={100} step={5} tooltip={t.ttDown} />
             <InputCard label={t.period} icon={<Calendar size={22} />} value={years} setter={setYears} unit={` ${t.years}`} min={1} max={40} step={1} tooltip={t.ttPeriod} />
@@ -261,27 +300,38 @@ const App = () => {
           <section style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
             <div style={{
               backgroundColor: '#2563eb',
-              padding: isMobile ? '30px' : '50px',
+              padding: isMobile ? '20px' : '30px',
               borderRadius: '40px',
               boxShadow: '0 20px 40px rgba(37, 99, 235, 0.2)',
-              minHeight: isMobile ? '280px' : '380px',
+              minHeight: isMobile ? '180px' : '200px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center'
             }}>
               <p style={{ fontSize: '12px', opacity: 0.9, textTransform: 'uppercase', fontWeight: '900' }}>{t.profit}</p>
               <h2 style={{
-                fontSize: isMobile ? '32px' : '64px', fontWeight: '900', margin: '20px 0', whiteSpace: 'nowrap',
+                fontSize: isMobile ? '32px' : '64px', fontWeight: '900', margin: '0 0 15px 0', whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis'
               }}>
                 {currSym}{Math.round(stats.totalProfit).toLocaleString()}
               </h2>
               <div style={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
-                <span style={{ color: '#4ade80', fontWeight: '900' }}>{t.roi}: {stats.roi}%</span>
-                <span style={{ fontSize: '14px', opacity: 1 }}>{t.breakeven}: {stats.breakeven} {t.years}</span>
+                <span style={{ color: '#4ade80', fontWeight: '900', fontSize: '14px' }}>{t.roi}: {stats.roi}%</span>
+                <span style={{ fontSize: '13px', opacity: 0.9 }}>{t.breakeven}: {stats.breakeven} {t.years}</span>
               </div>
             </div>
+            <ExitStrategy
+              years={years}
+              price={price}
+              growth={growth}
+              mortgageRate={mortgageRate}
+              downPayment={downPayment}
+              lang={lang}
+              currSym={currSym}
+            />
+            <MarketBenchmark userGrowth={growth} lang={lang} />
+            <StressTest currentRoi={stats.roi} years={years} lang={lang} />
 
             <div style={{ minHeight: '140px' }}>
               <SmartInsights roi={stats.roi} cashflow={stats.monthlyCashflow} growth={growth} />
@@ -342,7 +392,7 @@ const App = () => {
 
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '20px' }}>
               <ResultCard label={t.finalValue} value={Math.round(stats.finalPrice)} color="#4ade80" tooltip={t.ttFinalValue} />
-              <ResultCard label={t.monthlyNet} value={Math.round(stats.monthlyCashflow)} color="#fff" tooltip={t.ttMonthlyNet} />
+              <ResultCard label={t.monthlyNet} value={Math.round(stats.monthlyCashflow)} color="#fff" tooltip={t.netMonthlyTooltip} />
               <ResultCard label={t.mortgagePay} value={Math.round(stats.monthlyMortgage)} color="#f87171" tooltip={t.ttMortgagePay} />
               <ResultCard label={t.equity} value={Math.round(stats.investedCapital)} color="#60a5fa" tooltip={t.ttEquity} />
             </div>
@@ -372,24 +422,46 @@ const App = () => {
 
         <footer style={{ borderTop: '1px solid #111', padding: '60px 0', marginTop: '60px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr 1fr', gap: isMobile ? '40px' : '80px', textAlign: isMobile ? 'center' : 'left' }}>
+
+            {/* მარცხენა სვეტი - ბრენდი */}
             <div>
               <h3 style={{ color: '#fff', marginBottom: '20px', fontSize: '18px', fontWeight: '900' }}>INVESTORCORE</h3>
               <p style={{ color: '#999', fontSize: '14px', lineHeight: '1.6' }}>{t.footerText}</p>
             </div>
+
+            {/* შუა სვეტი - ოფიციალური წყაროები */}
             <div>
-              <h4 style={{ color: '#D4AF37', fontSize: '12px', marginBottom: '20px', textTransform: 'uppercase' }}>{t.sources}</h4>
+              <h4 style={{ color: '#D4AF37', fontSize: '12px', marginBottom: '20px', textTransform: 'uppercase' }}>
+                {t.sources}
+              </h4>
               <ul style={{ listStyle: 'none', padding: 0, fontSize: '13px', lineHeight: '2.5' }}>
-                <li><a href="https://www.nbg.gov.ge" target="_blank" rel="noreferrer" style={{ color: '#999', textDecoration: 'none' }}>NBG.GE</a></li>
-                <li><a href="https://www.geostat.ge" target="_blank" rel="noreferrer" style={{ color: '#999', textDecoration: 'none' }}>GEOSTAT</a></li>
+                <li><a href="https://www.nbg.gov.ge" target="_blank" rel="noreferrer" style={{ color: '#999', textDecoration: 'none' }}>NBG.GE (რეფინანსირება)</a></li>
+                <li><a href="https://www.geostat.ge" target="_blank" rel="noreferrer" style={{ color: '#999', textDecoration: 'none' }}>GEOSTAT (RPPI ინდექსი)</a></li>
+                <li><a href="https://tbccapital.ge" target="_blank" rel="noreferrer" style={{ color: '#999', textDecoration: 'none' }}>TBC CAPITAL (ანალიტიკა)</a></li>
+                <li><a href="https://www.galtandtaggart.com" target="_blank" rel="noreferrer" style={{ color: '#999', textDecoration: 'none' }}>GALT & TAGGART (კვლევები)</a></li>
               </ul>
             </div>
+
+            {/* მარჯვენა სვეტი - ავტანდილ აბუაშვილის კონტაქტი */}
             <div>
-              <h4 style={{ color: '#D4AF37', fontSize: '12px', marginBottom: '20px', textTransform: 'uppercase' }}>{t.contact}</h4>
+              <h4 style={{ color: '#D4AF37', fontSize: '12px', marginBottom: '20px', textTransform: 'uppercase' }}>
+                {t.contact}
+              </h4>
               <ul style={{ listStyle: 'none', padding: 0, fontSize: '13px', lineHeight: '2.5' }}>
-                <li style={{ color: '#999' }}>+995 5XX XX XX XX</li>
-                <li style={{ color: '#999' }}>Email Us</li>
+                <li style={{ color: '#fff', fontWeight: 'bold', fontSize: '15px' }}>ავთანდილ აბუაშვილი</li>
+                <li>
+                  <a href="mailto:abuashviliavtandil@gmail.com" style={{ color: '#999', textDecoration: 'none' }}>
+                    abuashviliavtandil@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/in/avtandil-abuashvili-a624b23b9/" target="_blank" rel="noreferrer" style={{ color: '#0077b5', textDecoration: 'none', fontWeight: 'bold' }}>
+                    LinkedIn პროფილი
+                  </a>
+                </li>
               </ul>
             </div>
+
           </div>
         </footer>
       </main>

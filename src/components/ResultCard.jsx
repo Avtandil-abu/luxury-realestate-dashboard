@@ -7,20 +7,20 @@ const ResultCard = ({ label, value, color, tooltip }) => {
     return (
         <div style={{
             backgroundColor: '#111',
-            padding: '20px 20px', // გავზარდეთ დაშორებები (Padding)
-            borderRadius: '30px', // ოდნავ უფრო დავამრგვალეთ კუთხეები
+            padding: '24px 20px',
+            borderRadius: '30px',
             border: '1px solid #222',
             position: 'relative',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center', // ტექსტი შუაში რომ მოექცეს ვერტიკალურად
-            minHeight: '120px', // მკაცრად განვსაზღვრეთ სიმაღლე
+            justifyContent: 'center',
+            minHeight: '130px', // ოდნავ გავზარდეთ სიმაღლე, რომ სუნთქვა შეეძლოს
             transition: '0.3s ease'
         }}>
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center', // გავასწორეთ ცენტრზე
+                alignItems: 'center',
                 marginBottom: '15px'
             }}>
                 <p style={{
@@ -29,7 +29,7 @@ const ResultCard = ({ label, value, color, tooltip }) => {
                     fontWeight: '900',
                     textTransform: 'uppercase',
                     margin: 0,
-                    letterSpacing: '1px' // უფრო "ძვირფასი" იერი რომ ჰქონდეს
+                    letterSpacing: '1px'
                 }}>
                     {label}
                 </p>
@@ -37,35 +37,67 @@ const ResultCard = ({ label, value, color, tooltip }) => {
                 {tooltip && (
                     <div style={{ position: 'relative' }}>
                         <Info
-                            size={14}
-                            style={{ color: '#444', cursor: 'pointer' }}
-                            onMouseEnter={() => setShowTooltip(true)}
-                            onMouseLeave={() => setShowTooltip(false)}
+                            size={18} // იყო 14, გავხადეთ 18 (უფრო შესამჩნევია)
+                            style={{
+                                color: '#D4AF37', // გახდა ოქროსფერი
+                                cursor: 'help',
+                                opacity: 0.6, // ოდნავ დავაკლეთ სიკაშკაშე, რომ არ "ყვიროდეს"
+                                transition: '0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                                setShowTooltip(true);
+                                e.currentTarget.style.opacity = '1'; // მაუსის მიტანისას ნათდება
+                            }}
+                            onMouseLeave={(e) => {
+                                setShowTooltip(false);
+                                e.currentTarget.style.opacity = '0.6';
+                            }}
                         />
+
                         {showTooltip && (
                             <div style={{
-                                position: 'absolute', bottom: '100%', right: '0',
-                                backgroundColor: '#1a1a1a', color: '#bbb', padding: '12px',
-                                borderRadius: '12px', width: '200px', fontSize: '11px',
-                                border: '1px solid #D4AF37', zIndex: 100, marginBottom: '10px',
-                                boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                                lineHeight: '1.4'
+                                position: 'absolute',
+                                bottom: '125%', // ოდნავ მაღლა ავწიეთ
+                                right: '0',
+                                backgroundColor: '#1a1a1a',
+                                color: '#D4AF37', // ტექსტიც ოქროსფერი (ან #ddd თუ ძალიან ბევრი ოქროსფერი არ გინდა)
+                                padding: '16px', // გავზარდეთ შიდა დაშორება
+                                borderRadius: '15px',
+                                width: '260px', // გავზარდეთ სიგანე (იყო 200), რომ ტექსტი ჩაეტიოს
+                                fontSize: '12px', // ოდნავ გავზარდეთ ფონტი
+                                border: '1px solid #D4AF37',
+                                zIndex: 9999,
+                                boxShadow: '0 15px 40px rgba(0,0,0,0.8)',
+                                lineHeight: '1.5',
+                                textAlign: 'left', // მარცხნიდან დაწყება უფრო პროფესიონალურია გრძელი ტექსტისთვის,
+                                pointerEvents: 'none'
                             }}>
                                 {tooltip}
+                                {/* პატარა ისარი ქვემოთ */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '100%',
+                                    right: '10px',
+                                    borderWidth: '6px',
+                                    borderStyle: 'solid',
+                                    borderColor: '#D4AF37 transparent transparent transparent',
+                                    pointerEvents: 'none'
+                                }}></div>
                             </div>
                         )}
                     </div>
                 )}
             </div>
+
             <h3 style={{
-                color: color,
-                fontSize: '32px', // ციფრი ოდნავ გავადიდეთ (იყო 24px)
+                color: value < 0 ? '#ff4d4d' : color, // თუ მინუსია, ავტომატურად წითლდება
+                fontSize: '32px',
                 fontWeight: '900',
                 marginTop: '0',
                 marginBottom: 0,
                 letterSpacing: '-1px'
             }}>
-                ${value.toLocaleString()}
+                {value < 0 ? `-$${Math.abs(value).toLocaleString()}` : `$${value.toLocaleString()}`}
             </h3>
         </div>
     );

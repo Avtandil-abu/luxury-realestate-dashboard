@@ -2,7 +2,11 @@ import React from 'react';
 import { TrendingUp } from 'lucide-react';
 
 const ComparisonModule = ({ price, rent, years, downPayment, stats, currSym, lang }) => {
-    const alternateInvestment = (price * (downPayment / 100)) * Math.pow(1 + 0.08, years);
+    // პროფესიონალური მიდგომა: ლარზე საშუალო დეპოზიტი 10%, დოლარზე 2%
+    // ვიყენებთ currSym-ს ($, ₾) ვალუტის ამოსაცნობად
+    const depositRate = (currSym === '₾') ? 0.10 : 0.02;
+
+    const alternateInvestment = (price * (downPayment / 100)) * Math.pow(1 + depositRate, years);
     const totalRentPaid = rent * 12 * years;
     const depPlusRent = alternateInvestment - totalRentPaid;
     const isPurchaseBetter = stats.totalProfit > depPlusRent;

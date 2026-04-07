@@ -224,3 +224,50 @@ footer a:hover {
     gap: 15px;
   }
 }
+
+/* 1. თუ წერტილები SVG-ია და აქვთ "grid" კლასი */
+svg.grid,
+.grid-background,
+.bg-grid {
+  display: none !important;
+}
+
+/* 2. თუ წერტილები პირდაპირ რომელიმე კონტეინერშია ჩახატული */
+[class*="grid-dot"],
+[class*="dot-pattern"] {
+  display: none !important;
+}
+
+/* 3. ყველაზე უსაფრთხო "ფილტრი" */
+div[style*="background-image"] {
+  background-image: none !important;
+}
+
+/* App.css */
+
+.consult-link-btn {
+  background-color: #D4AF37 !important;
+  color: #000000 !important;
+  /* შავი ფერი აუცილებლად */
+  text-decoration: none !important;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 900;
+  display: inline-block;
+  font-size: 13px;
+  transition: transform 0.2s ease;
+  border: none;
+}
+
+.consult-link-btn:hover {
+  color: #000000 !important;
+  /* მაუსის მიტანისას ისევ შავი */
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.consult-link-btn:visited,
+.consult-link-btn:active {
+  color: #000000 !important;
+  /* დაჭერის შემდეგაც შავი */
+}

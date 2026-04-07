@@ -46,7 +46,8 @@ export const translations = {
         rentSource: "ეფუძნება სამომხმარებლო ფასების ინდექსს (CPI). წყარო: Geostat.ge",
         syncLabel: "ავტომატური სინქრონიზაცია",
         syncDesc: "ჩართვის შემთხვევაში, ქირა გაიზრდება ბინის საბაზრო ფასის ცვლილების პროპორციულად.",
-        growthSource: "ეფუძნება საცხოვრებელი ქონების ფასების ინდექსს (RPPI). წყარო: Geostat.ge"
+        growthSource: "ეფუძნება საცხოვრებელი ქონების ფასების ინდექსს (RPPI). წყარო: Geostat.ge",
+        netMonthlyTooltip: "უარყოფითი ნეტ-შემოსავალი ნიშნავს, რომ ქირა სრულად ვერ ფარავს იპოთეკას. თუმცა, ქონების ღირებულების ზრდა (Capital Appreciation) ამ დანაკლისს აკომპენსირებს."
     },
     en: {
         title: "Investment Analytics",
@@ -95,7 +96,8 @@ export const translations = {
         rentSource: "Based on Consumer Price Index (CPI). Source: Geostat.ge",
         syncLabel: "Automatic Sync",
         syncDesc: "If enabled, rent will increase proportionally to the property's market value growth.",
-        growthSource: "Based on Residential Property Price Index (RPPI). Source: Geostat.ge"
+        growthSource: "Based on Residential Property Price Index (RPPI). Source: Geostat.ge",
+        netMonthlyTooltip: "Negative cash flow means rent doesn't cover the mortgage. However, property value appreciation typically offsets this monthly difference."
     },
     ru: {
         title: "Инвестиционная аналитика",
@@ -144,6 +146,9 @@ export const translations = {
         rentSource: "Основано на индексе потребительских цен (CPI). Источник: Geostat.ge",
         syncLabel: "Авто-синхронизация",
         syncDesc: "При включении, аренда будет расти пропорционально изменению рыночной стоимости жилья.",
-        growthSource: "Основано на индексе цен на жилую недвижимость (RPPI). Источник: Geostat.ge"
+        growthSource: "Основано на индексе цен на жилую недвижимость (RPPI). Источник: Geostat.ge",
+        netMonthlyTooltip: "Отрицательный денежный поток означает, что аренда не покрывает ипотеку. Однако рост стоимости недвижимости обычно компенсирует эту разницу."
+
     }
+
 };

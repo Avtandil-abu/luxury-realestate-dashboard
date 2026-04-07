@@ -79,7 +79,7 @@ const FinancialSummary = ({ totalProfit, appreciation, netRent, loan, totalMortg
                     <div style={{ fontSize: '38px', fontWeight: '900', color: '#D4AF37', marginTop: '5px' }}>
                         {currSym}{Math.round(safeProfit).toLocaleString()}
                     </div>
-                    <p style={{ fontSize: '12px', color: '#555', marginTop: '8px' }}>{content.note}</p>
+                    <p style={{ fontSize: '12px', color: '#7b7a7a', marginTop: '8px' }}>{content.note}</p>
                 </div>
             </div>
 
@@ -91,7 +91,7 @@ const FinancialSummary = ({ totalProfit, appreciation, netRent, loan, totalMortg
                     <Activity size={22} color="#D4AF37" />
                 </div>
                 <div>
-                    <p style={{ fontSize: '11px', color: '#666', margin: 0, textTransform: 'uppercase' }}>{content.eff}</p>
+                    <p style={{ fontSize: '12px', color: '#666', margin: 0, textTransform: 'uppercase' }}>{content.eff}</p>
                     <p style={{ fontSize: '16px', color: '#fff', fontWeight: 'bold', margin: 0 }}>
                         {annualReturn !== "NaN" ? annualReturn : "0.0"}% {content.yield}
                     </p>
