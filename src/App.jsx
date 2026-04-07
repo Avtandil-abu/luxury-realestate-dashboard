@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from "@vercel/analytics/react";
 import InteractiveBackground from './InteractiveBackground';
 import './App.css';
 import {
@@ -466,6 +467,7 @@ const App = () => {
         </footer>
       </main>
       <ChatButton />
+      <Analytics />
     </div>
   );
 };
