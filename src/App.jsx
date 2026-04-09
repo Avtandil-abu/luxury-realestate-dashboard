@@ -460,7 +460,7 @@ const App = () => {
                     LinkedIn პროფილი
                   </a>
                 </li>
-                <div style={{ marginTop: '15px' }}>
+                {/* <div style={{ marginTop: '15px' }}>
                   <a
                     href="https://abuashvili.gumroad.com/l/svmlvq"
                     target="_blank"
@@ -478,7 +478,7 @@ const App = () => {
                   >
                     Get Source Code & License
                   </a>
-                </div>
+                </div> */}
               </ul>
             </div>
 
