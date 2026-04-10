@@ -38,6 +38,8 @@ const App = () => {
   }, []);
 
   const { lang, currency, rate } = useApp();
+  // თუ რეალური კურსი ჯერ არ მოსულა, გამოვიყენოთ სტანდარტული 2.7
+  const effectiveRate = rate && rate > 0 ? rate : 2.7;
   const t = translations[lang];
 
   const [price, setPrice] = useState(() => Number(localStorage.getItem('invest_price')) || 100000);
@@ -232,8 +234,50 @@ const App = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.2fr', gap: isMobile ? '20px' : '40px' }}>
           <section>
-            <InputCard label={t.price} icon={<DollarSign size={22} />} value={currency === 'GEL' ? Math.round(price * rate) : price} setter={(val) => setPrice(currency === 'GEL' ? Math.round(val / rate) : val)} unit={currSym} min={1000} max={2000000} step={1000} tooltip={t.ttPrice} />
-            <InputCard label={t.rent} icon={<Wallet size={22} />} value={currency === 'GEL' ? Math.round(rent * rate) : rent} setter={(val) => setRent(currency === 'GEL' ? Math.round(val / rate) : val)} unit={currSym} min={0} max={20000} step={50} tooltip={t.ttRent} />
+            <InputCard
+              label={t.price}
+              icon={<DollarSign size={22} />}
+              value={Math.round((currency === 'GEL' ? (price * (rate || 2.7)) : price) || 0)}
+              setter={(val) => {
+                // 1. ჯერ ვწმენდთ შემოსულ მნიშვნელობას მძიმეებისგან და ასოებისგან
+                const cleanVal = parseFloat(String(val).replace(/,/g, '').replace(/[^0-9.]/g, '')) || 0;
+
+                // 2. აი აქ ვსვამთ "ჭერს" - მაქსიმუმ 100 მილიონი
+                const cappedVal = Math.min(cleanVal, 100000000);
+
+                const currentRate = rate || 2.7;
+
+                if (currency === 'GEL') {
+                  // 3. ვიყენებთ cappedVal-ს ნაცვლად cleanVal-ისა
+                  setPrice(cappedVal / currentRate);
+                } else {
+                  setPrice(cappedVal);
+                }
+              }}
+              unit={currSym}
+              min={1000}
+              max={100000000}
+              step={currency === 'GEL' ? 2500 : 1000}
+              tooltip={t.ttPrice}
+            />
+
+            <InputCard
+              label={t.rent}
+              icon={<Wallet size={22} />}
+              value={Math.round((currency === 'GEL' ? (rent * (rate || 2.7)) : rent) || 0)}
+              setter={(val) => {
+                const cleanVal = parseFloat(String(val).replace(/,/g, '').replace(/[^0-9.]/g, '')) || 0;
+                const currentRate = rate || 2.7;
+
+                if (currency === 'GEL') {
+                  setRent(cleanVal / currentRate);
+                } else {
+                  setRent(cleanVal);
+                }
+              }}
+              unit={currSym}
+              min={0} max={20000} step={currency === 'GEL' ? 100 : 50} tooltip={t.ttRent}
+            />
 
             <InputCard
               label={t.rentGrowthLabel}

@@ -6,11 +6,15 @@ const InputCard = ({ label, icon, value, setter, unit, min, max, tooltip, step }
     const [isHovered, setIsHovered] = useState(false);
 
     const handleChange = (e) => {
-        const val = e.target.value;
+        let val = e.target.value.replace(/[^0-9.]/g, '');
+
+        // არ მივცეთ უფლება 10 სიმბოლოზე (მაგ. 9 მილიარდი) მეტი ჩაწეროს
+        if (val.length > 10) val = val.slice(0, 10);
+
         if (val === '') {
             setter('');
         } else {
-            const num = Number(val.replace(/[^0-9.]/g, ''));
+            const num = Number(val);
             if (!isNaN(num)) setter(num);
         }
     };
@@ -19,8 +23,15 @@ const InputCard = ({ label, icon, value, setter, unit, min, max, tooltip, step }
         if (value === '' || value === null) setter(0);
     };
 
-    const increment = () => setter(prev => Math.min(max, (Number(prev) || 0) + step));
-    const decrement = () => setter(prev => Math.max(min, (Number(prev) || 0) - step));
+    const increment = () => {
+        const nextVal = Math.min(max, (Number(value) || 0) + step);
+        setter(nextVal);
+    };
+
+    const decrement = () => {
+        const nextVal = Math.max(min, (Number(value) || 0) - step);
+        setter(nextVal);
+    };
 
     return (
         <div
