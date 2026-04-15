@@ -190,6 +190,27 @@ const App = () => {
             </a>
           </div>
         )}
+        {/* --- Gumroad Link --- */}
+        <a
+          href="https://abuashvili.gumroad.com/l/svmlvq"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: '#D4AF37',
+            textDecoration: 'none',
+            fontSize: isMobile ? '11px' : '13px',
+            fontWeight: 'bold',
+            border: '1px solid #D4AF37',
+            padding: '8px 15px',
+            borderRadius: '12px',
+            marginRight: isMobile ? '0' : '20px',
+            transition: '0.3s'
+          }}
+          onMouseOver={(e) => { e.target.style.backgroundColor = 'rgba(212, 175, 55, 0.1)'; }}
+          onMouseOut={(e) => { e.target.style.backgroundColor = 'transparent'; }}
+        >
+          Source Code
+        </a>
         <a
           href="mailto:abuashviliavtandil@gmail.com"
           className="consult-link-btn"
@@ -504,25 +525,7 @@ const App = () => {
                     LinkedIn პროფილი
                   </a>
                 </li>
-                {/* <div style={{ marginTop: '15px' }}>
-                  <a
-                    href="https://abuashvili.gumroad.com/l/svmlvq"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: '#FFD700',
-                      textDecoration: 'none',
-                      fontSize: '14px',
-                      fontWeight: 'bold',
-                      border: '1px solid #FFD700',
-                      padding: '8px 12px',
-                      borderRadius: '5px',
-                      display: 'inline-block'
-                    }}
-                  >
-                    Get Source Code & License
-                  </a>
-                </div> */}
+
               </ul>
             </div>
 
